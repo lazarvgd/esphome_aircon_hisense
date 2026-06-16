@@ -606,7 +606,7 @@ namespace esphome
         
             float heat_tgt_temp = 16.1111f;
             float cool_tgt_temp = 26.6667f;
-            static const int UART_BUF_SIZE = 128;
+            static const int UART_BUF_SIZE = 160;
             uint8_t uart_buf[UART_BUF_SIZE];
 
             int get_response(const uint8_t input, uint8_t *out)
