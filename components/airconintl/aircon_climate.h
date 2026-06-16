@@ -606,7 +606,7 @@ namespace esphome
         
             float heat_tgt_temp = 16.1111f;
             float cool_tgt_temp = 26.6667f;
-            static const int UART_BUF_SIZE = 160;
+            static const int UART_BUF_SIZE = 180;
             uint8_t uart_buf[UART_BUF_SIZE];
 
             int get_response(const uint8_t input, uint8_t *out)
@@ -659,7 +659,7 @@ namespace esphome
                             if (DEBUG_LOGGING) ESP_LOGD("aircon_climate", "Header byte %zu matches: 0x%02X", idx, msg_buffer[idx]);
                         }
                         if (idx == 4) {
-                            expected_msg_size = 129;
+                            expected_msg_size = 160;
                             if (DEBUG_LOGGING) ESP_LOGD("aircon_climate", "Expected message size: %d", expected_msg_size);
                             if (expected_msg_size > UART_BUF_SIZE) {
                                 ESP_LOGE("aircon_climate", "Message size too large: %d", expected_msg_size);
