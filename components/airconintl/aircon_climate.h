@@ -659,7 +659,7 @@ namespace esphome
                             if (DEBUG_LOGGING) ESP_LOGD("aircon_climate", "Header byte %zu matches: 0x%02X", idx, msg_buffer[idx]);
                         }
                         if (idx == 4) {
-                            expected_msg_size = sizeof(Device_Status);
+                            expected_msg_size = 129;
                             if (DEBUG_LOGGING) ESP_LOGD("aircon_climate", "Expected message size: %d", expected_msg_size);
                             if (expected_msg_size > UART_BUF_SIZE) {
                                 ESP_LOGE("aircon_climate", "Message size too large: %d", expected_msg_size);
