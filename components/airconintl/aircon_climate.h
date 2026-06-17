@@ -336,14 +336,7 @@ namespace esphome
 
                     // User requested mode change
                     ClimateMode md = *call.get_mode();
-
-                    if (md != climate::CLIMATE_MODE_OFF && this->mode == climate::CLIMATE_MODE_OFF)
-                    {
-                        std::vector<uint8_t> msg(on, on + sizeof(on));
-                        ESP_LOGD("aircon_climate", "Enqueuing Power On");
-                        send_message("Power On", msg);
-                    }
-
+                    
                     switch (md)
                     {
                     case climate::CLIMATE_MODE_OFF:
