@@ -150,14 +150,8 @@ namespace esphome
                             ((Device_Status *)uart_buf)->up_down);
 
                         // Convert temperatures to celsius
-                        float tgt_temp, curr_temp;
-                        if (temperature_unit == "C") {
-                            tgt_temp = (float)((Device_Status *)uart_buf)->indoor_temperature_setting;
-                            curr_temp = (float)((Device_Status *)uart_buf)->indoor_temperature_status;
-                        } else {
-                            tgt_temp = (((Device_Status *)uart_buf)->indoor_temperature_setting - 32) * 0.5556f;
-                            curr_temp = (((Device_Status *)uart_buf)->indoor_temperature_status - 32) * 0.5556f;
-                        }
+                        float tgt_temp = (float)((Device_Status *)uart_buf)->indoor_temperature_setting;
+                        float curr_temp = (float)((Device_Status *)uart_buf)->indoor_temperature_status;
 
                         if (tgt_temp > 7 && tgt_temp < 33)
                             target_temperature = tgt_temp;
@@ -603,7 +597,7 @@ namespace esphome
             std::string current_desc;
             std::queue<Message> message_queue;
             char desc_buffer[64];
-            std::string temperature_unit = "C";
+            std::string temperature_unit = "F";
             const uint8_t* temp_f_messages[26] = {
                 temp_61_F, temp_62_F, temp_63_F, temp_64_F, temp_65_F, temp_66_F, temp_67_F, temp_68_F, temp_69_F, temp_70_F,
                 temp_71_F, temp_72_F, temp_73_F, temp_74_F, temp_75_F, temp_76_F, temp_77_F, temp_78_F, temp_79_F, temp_80_F,
@@ -669,7 +663,7 @@ namespace esphome
                             if (DEBUG_LOGGING) ESP_LOGD("aircon_climate", "Header byte %zu matches: 0x%02X", idx, msg_buffer[idx]);
                         }
                         if (idx == 4) {
-                            expected_msg_size = 160;
+                            expected_msg_size = msg_buffer[4] + 9;
                             if (DEBUG_LOGGING) ESP_LOGD("aircon_climate", "Expected message size: %d", expected_msg_size);
                             if (expected_msg_size > UART_BUF_SIZE) {
                                 ESP_LOGE("aircon_climate", "Message size too large: %d", expected_msg_size);
