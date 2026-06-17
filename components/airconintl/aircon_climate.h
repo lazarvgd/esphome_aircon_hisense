@@ -283,7 +283,7 @@ namespace esphome
                     // Set RS485 to transmit mode
                     if (de_pin != nullptr) de_pin->digital_write(true);
                     if (re_pin != nullptr) re_pin->digital_write(true);
-                    write_array(item.payload.data(), item.payload.size());
+                    while (available()) {
                     flush();
                     // Set RS485 back to receive mode
                     if (de_pin != nullptr) de_pin->digital_write(false);
