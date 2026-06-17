@@ -283,11 +283,15 @@ namespace esphome
                     // Set RS485 to transmit mode
                     if (de_pin != nullptr) de_pin->digital_write(true);
                     if (re_pin != nullptr) re_pin->digital_write(true);
-                    while (available()) {
+                    write_array(item.payload.data(), item.payload.size());
                     flush();
                     // Set RS485 back to receive mode
                     if (de_pin != nullptr) de_pin->digital_write(false);
                     if (re_pin != nullptr) re_pin->digital_write(false);
+                    // Discard any self-echo received on the half-duplex RS485 line during our own transmission
+                    while (available()) {
+                        read();
+                    }
                     current_desc = item.description;
                     send_state = WAITING_ACK;
                     send_timestamp = millis();
