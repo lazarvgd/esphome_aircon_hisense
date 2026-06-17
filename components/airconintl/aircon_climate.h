@@ -650,7 +650,7 @@ namespace esphome
                         if (DEBUG_LOGGING) ESP_LOGD("aircon_climate", "Checksum add: 0x%02X, current checksum: %d", msg_buffer[idx], checksum);
                     }
                     if (idx < 16) {
-                        if (msg_buffer[idx] != expected[idx]) {
+                        if (idx != 4 && msg_buffer[idx] != expected[idx]) {
                             ESP_LOGE("aircon_climate", "Header mismatch at byte %zu: expected %02X, got %02X", idx, expected[idx], msg_buffer[idx]);
                             in_message = false;
                             msg_buffer.clear();
