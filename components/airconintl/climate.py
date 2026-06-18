@@ -34,6 +34,7 @@ CONF_TEMPERATURE_UNIT = "temperature_unit"
 CONF_RE_PIN = "re_pin"
 CONF_DE_PIN = "de_pin"
 CONF_POWER = "power"
+CONF_INDOOR_TEMPERATURE = "indoor_temperature"
 
 airconintl_ns = cg.esphome_ns.namespace("airconintl")
 AirconClimate = airconintl_ns.class_("AirconClimate", cg.PollingComponent, climate.Climate, uart.UARTDevice)
@@ -60,6 +61,13 @@ CONFIG_SCHEMA = cv.All(
                 unit_of_measurement=UNIT_HERTZ,
                 accuracy_decimals=0,
                 device_class=DEVICE_CLASS_FREQUENCY,
+                state_class=STATE_CLASS_MEASUREMENT,
+            ),
+            cv.Optional(CONF_INDOOR_TEMPERATURE): sensor.sensor_schema(
+                unit_of_measurement=UNIT_CELSIUS,
+                icon=ICON_THERMOMETER,
+                accuracy_decimals=0,
+                device_class=DEVICE_CLASS_TEMPERATURE,
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
             cv.Optional(CONF_OUTDOOR_TEMPERATURE): sensor.sensor_schema(
@@ -143,6 +151,9 @@ async def to_code(config):
     if CONF_COMPRESSOR_FREQUENCY_SEND in config:
         sens = await sensor.new_sensor(config[CONF_COMPRESSOR_FREQUENCY_SEND])
         cg.add(var.set_compressor_frequency_send_sensor(sens))
+    if CONF_INDOOR_TEMPERATURE in config:
+        sens = await sensor.new_sensor(config[CONF_INDOOR_TEMPERATURE])
+        cg.add(var.set_indoor_temperature_sensor(sens))
     if CONF_OUTDOOR_TEMPERATURE in config:
         sens = await sensor.new_sensor(config[CONF_OUTDOOR_TEMPERATURE])
         cg.add(var.set_outdoor_temperature_sensor(sens))
