@@ -222,10 +222,16 @@ namespace esphome
                 set_sensor(indoor_pipe_temperature, ((Device_Status *)uart_buf)->indoor_pipe_temperature);
                 set_sensor(indoor_humidity_setting, ((Device_Status *)uart_buf)->indoor_humidity_setting);
                 set_sensor(indoor_humidity_status, ((Device_Status *)uart_buf)->indoor_humidity_status);
-                uint16_t v_dc = ((uint16_t)((Device_Status *)uart_buf)->generatrix_voltage_high << 8) | ((Device_Status *)uart_buf)->generatrix_voltage_low;
-                uint8_t i_dc = ((Device_Status *)uart_buf)->IUV;
-                ESP_LOGD("aircon_climate", "v_dc_raw: %d IUV_raw: %d", v_dc, i_dc);
-                set_sensor(power_sensor, v_dc * i_dc * 0.001f);
+                uint16_t uab = ((uint16_t)((Device_Status *)uart_buf)->UAB_HIGH << 8) | ((Device_Status *)uart_buf)->UAB_LOW;
+                uint8_t ibc = ((Device_Status *)uart_buf)->IBC;
+                ESP_LOGD("aircon_climate", "UAB: %d IAB: %d IBC: %d ICA: %d IUV: %d v_dc: %d",
+                    uab,
+                    ((Device_Status *)uart_buf)->IAB,
+                    ibc,
+                    ((Device_Status *)uart_buf)->ICA,
+                    ((Device_Status *)uart_buf)->IUV,
+                    (uint16_t)(((Device_Status *)uart_buf)->generatrix_voltage_high << 8) | ((Device_Status *)uart_buf)->generatrix_voltage_low);
+                set_sensor(power_sensor, uab * ibc * 0.01f);
             }
 
             void control(const ClimateCall &call) override
