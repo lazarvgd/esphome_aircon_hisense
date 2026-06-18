@@ -67,6 +67,7 @@ namespace esphome
             void set_outdoor_condenser_temperature_sensor(Sensor *sensor) { this->outdoor_condenser_temperature = sensor; }
             void set_compressor_exhaust_temperature_sensor(Sensor *sensor) { this->compressor_exhaust_temperature = sensor; }
             void set_target_exhaust_temperature_sensor(Sensor *sensor) { this->target_exhaust_temperature = sensor; }
+            void set_power_sensor(Sensor *sensor) { this->power_sensor = sensor; }
             void set_indoor_pipe_temperature_sensor(Sensor *sensor) { this->indoor_pipe_temperature = sensor; }
             void set_indoor_humidity_setting_sensor(Sensor *sensor) { this->indoor_humidity_setting = sensor; }
             void set_indoor_humidity_status_sensor(Sensor *sensor) { this->indoor_humidity_status = sensor; }
@@ -221,6 +222,10 @@ namespace esphome
                 set_sensor(indoor_pipe_temperature, ((Device_Status *)uart_buf)->indoor_pipe_temperature);
                 set_sensor(indoor_humidity_setting, ((Device_Status *)uart_buf)->indoor_humidity_setting);
                 set_sensor(indoor_humidity_status, ((Device_Status *)uart_buf)->indoor_humidity_status);
+                uint16_t v_dc = ((uint16_t)((Device_Status *)uart_buf)->generatrix_voltage_high << 8) | ((Device_Status *)uart_buf)->generatrix_voltage_low;
+                uint8_t i_dc = ((Device_Status *)uart_buf)->IUV;
+                ESP_LOGD("aircon_climate", "v_dc_raw: %d IUV_raw: %d", v_dc, i_dc);
+                set_sensor(power_sensor, v_dc * i_dc * 0.001f);
             }
 
             void control(const ClimateCall &call) override
@@ -403,6 +408,7 @@ namespace esphome
             sensor::Sensor *indoor_pipe_temperature{nullptr};
             sensor::Sensor *indoor_humidity_setting{nullptr};
             sensor::Sensor *indoor_humidity_status{nullptr};
+            sensor::Sensor *power_sensor{nullptr};
 
             GPIOPin *re_pin{nullptr};
             GPIOPin *de_pin{nullptr};
