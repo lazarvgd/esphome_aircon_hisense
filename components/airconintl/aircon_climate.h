@@ -64,6 +64,7 @@ namespace esphome
             void set_compressor_frequency_setting_sensor(Sensor *sensor) { this->compressor_frequency_setting = sensor; }
             void set_compressor_frequency_send_sensor(Sensor *sensor) { this->compressor_frequency_send = sensor; }
             void set_outdoor_temperature_sensor(Sensor *sensor) { this->outdoor_temperature = sensor; }
+            void set_indoor_temperature_sensor(Sensor *sensor) { this->indoor_temperature_sensor = sensor; }
             void set_outdoor_condenser_temperature_sensor(Sensor *sensor) { this->outdoor_condenser_temperature = sensor; }
             void set_compressor_exhaust_temperature_sensor(Sensor *sensor) { this->compressor_exhaust_temperature = sensor; }
             void set_target_exhaust_temperature_sensor(Sensor *sensor) { this->target_exhaust_temperature = sensor; }
@@ -216,6 +217,7 @@ namespace esphome
                 set_sensor(compressor_frequency_setting, ((Device_Status *)uart_buf)->compressor_frequency_setting);
                 set_sensor(compressor_frequency_send, ((Device_Status *)uart_buf)->compressor_frequency_send);
                 set_sensor(outdoor_temperature, ((Device_Status *)uart_buf)->outdoor_temperature);
+                set_sensor(indoor_temperature_sensor, ((Device_Status *)uart_buf)->indoor_temperature_status);
                 set_sensor(outdoor_condenser_temperature, ((Device_Status *)uart_buf)->outdoor_condenser_temperature);
                 set_sensor(compressor_exhaust_temperature, ((Device_Status *)uart_buf)->compressor_exhaust_temperature);
                 set_sensor(target_exhaust_temperature, ((Device_Status *)uart_buf)->target_exhaust_temperature);
@@ -408,6 +410,7 @@ namespace esphome
             sensor::Sensor *compressor_frequency_setting{nullptr};
             sensor::Sensor *compressor_frequency_send{nullptr};
             sensor::Sensor *outdoor_temperature{nullptr};
+            sensor::Sensor *indoor_temperature_sensor{nullptr};
             sensor::Sensor *outdoor_condenser_temperature{nullptr};
             sensor::Sensor *compressor_exhaust_temperature{nullptr};
             sensor::Sensor *target_exhaust_temperature{nullptr};
