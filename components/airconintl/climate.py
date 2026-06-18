@@ -8,12 +8,14 @@ from esphome.const import (
     DEVICE_CLASS_TEMPERATURE,
     DEVICE_CLASS_HUMIDITY,
     DEVICE_CLASS_FREQUENCY,
+    DEVICE_CLASS_POWER,
     ICON_THERMOMETER,
     ICON_WATER_PERCENT,
     STATE_CLASS_MEASUREMENT,
     UNIT_CELSIUS,
     UNIT_PERCENT,
     UNIT_HERTZ,
+    UNIT_WATT,
 )
 
 CODEOWNERS = ["@pslawinski"]
@@ -31,6 +33,7 @@ CONF_HUMIDITY_STATUS = "humidity_status"
 CONF_TEMPERATURE_UNIT = "temperature_unit"
 CONF_RE_PIN = "re_pin"
 CONF_DE_PIN = "de_pin"
+CONF_POWER = "power"
 
 airconintl_ns = cg.esphome_ns.namespace("airconintl")
 AirconClimate = airconintl_ns.class_("AirconClimate", cg.PollingComponent, climate.Climate, uart.UARTDevice)
@@ -108,6 +111,12 @@ CONFIG_SCHEMA = cv.All(
                 device_class=DEVICE_CLASS_HUMIDITY,
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
+            cv.Optional(CONF_POWER): sensor.sensor_schema(
+                unit_of_measurement=UNIT_WATT,
+                accuracy_decimals=0,
+                device_class=DEVICE_CLASS_POWER,
+                state_class=STATE_CLASS_MEASUREMENT,
+            ),
             cv.Optional(CONF_RE_PIN): pins.gpio_output_pin_schema,
             cv.Optional(CONF_DE_PIN): pins.gpio_output_pin_schema,
         }
@@ -155,6 +164,9 @@ async def to_code(config):
     if CONF_HUMIDITY_SETPOINT in config:
         sens = await sensor.new_sensor(config[CONF_HUMIDITY_SETPOINT])
         cg.add(var.set_indoor_humidity_setting_sensor(sens))
+    if CONF_POWER in config:
+        sens = await sensor.new_sensor(config[CONF_POWER])
+        cg.add(var.set_power_sensor(sens))
     if CONF_RE_PIN in config:
         pin = await cg.gpio_pin_expression(config[CONF_RE_PIN])
         cg.add(var.set_re_pin(pin))
